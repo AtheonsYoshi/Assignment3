@@ -10,6 +10,10 @@ three endings: Harmony, Silence, Overrun.
 - Target: standalone Quest 3 via OpenXR, mobile forward renderer, passthrough MR.
   No Lumen, Nanite, ray tracing or post-process on device. Must hold 90fps (75 minimum).
 - MCP plugin and toolsets are editor-only (`TargetAllowList: Editor`) — keep them out of the APK.
+- Unreal MCP server: http://localhost:8000/mcp (only while the editor is open). Exposes Blueprint, DataTable,
+  Material, Actor/Scene, UMG, Config Settings, Logs and Live Coding toolsets.
+- While the editor is open, change project settings through the ConfigSettingsToolset rather than editing
+  `Config/*.ini` by hand, or the editor may overwrite the file.
 
 ## Code layout
 - `Source/Assignment3/Rhythm/` — gameplay framework (C++, exposed to Blueprint):
@@ -34,7 +38,8 @@ Editor must be closed for a full build if the module is loaded (otherwise use Li
 - Includes are module-relative: `#include "Rhythm/RhythmNote.h"`.
 
 ## Submission requirements
-- APK: `MDDN222_P3_LASTNAME_FIRSTNAME.apk`
-- Android package: `nz.ac.wgtn.mddn222.project3.LASTNAME_FIRSTNAME`
-- Display name: `MDDN222 FIRSTNAME LASTNAME PROJECTNAME`
+Student: Matthew Williamson. Project name: Resonance.
+- APK file: `MDDN222_P3_Williamson_Matthew.apk` (rename the packaged APK to this)
+- Android package (set): `nz.ac.wgtn.mddn222.project3.Williamson_Matthew`
+- Display name (set): `MDDN222 Matthew Williamson Resonance`
 - Also: 30s video, artist's statement PDF, AI-usage document (Claude Code used for C++ and tooling).
