@@ -26,6 +26,26 @@ three endings: Harmony, Silence, Overrun.
 - `Tools/generate_beatmap.py` — builds beatmap CSVs (BPM grid, or librosa beat detection).
 - `Beatmaps/*.csv` — source CSVs; import into Content as DataTables with row type `RhythmNoteRow`.
 
+## Content layout
+- `Content/Resonance/Levels/L_Resonance` — game level (editor startup + game default map), duplicated from the template level.
+- `Content/Resonance/Core/BP_ResonanceDirector` — game flow. Currently a test flow: 3s delay → StartSong, no-fail mode on,
+  prints ending + score when the song finishes. Onboarding/offboarding will grow from here.
+- `Content/Resonance/Notes/BP_Note_{Slice,Shoot,Dodge,Choice}` — note Blueprints (Slice colours by hand + rotates its arrow in OnNoteActivated).
+- `Content/Resonance/Materials/M_Neon` + `MI_Neon_*` — unlit opaque emissive with fresnel edge (Color, Intensity params).
+- `Content/Resonance/Beatmaps/DT_*` — DataTables imported from `Beatmaps/*.csv`.
+- `BP_XRPawn` (template pawn): `BladeLeft/Right` (+ `BladeVisual*`) and `PalmLeft/Right` on the grip controllers.
+  Grip `IA_Grab_*_Pressed.Started` opens the palm, `IA_Grab_*_Released.Completed` closes it (grab logic untouched);
+  `IA_Shoot_Left/Right` call the `RhythmShoot(bRightHand)` function (sphere trace from the aim pose → TryShoot).
+
+## Unreal MCP gotchas
+- Visual-only mesh components need `bodyInstance.collisionProfileName = "NoCollision"`. Setting only `collisionEnabled`
+  gets overwritten by the profile on load (this blocked the pawn from spawning).
+- `read_graph_dsl` output is lossy (it omits existing wiring). Never rewrite an existing graph from it — add nodes with
+  `create_node` / `connect_pins` instead. `write_graph_dsl` appends to a graph.
+- DSL events use the node type id without `AddEvent|` (e.g. `Rhythm|Note|EventOnNoteActivated`); `fn` bodies must be
+  written into a graph created with `add_function_graph`.
+- PIE runs at ~3 fps while the editor window isn't focused. For desktop PIE, pass a `startTransform` at head height (z≈170).
+
 ## Build
 Editor must be closed for a full build if the module is loaded (otherwise use Live Coding, Ctrl+Alt+F11):
 ```
